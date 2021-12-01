@@ -25,20 +25,134 @@ ansible [core 2.11.6]
 1.</br>
 
 ```
-playbook|main⚡ansible-playbook -i test.yml ./site.yml                                                     kk
-[WARNING]: Unable to parse /Users/nikitavinogradov/Documents/education/pyCharm/ansible_netology/08-ansible-01-base/playbook/test.yml as an inventory source
-[WARNING]: No inventory was parsed, only implicit localhost is available
-[WARNING]: provided hosts list is empty, only localhost is available. Note that the implicit localhost does not match 'all'
+playbook|main⚡ ⇒ ansible-playbook -i inventory/test.yml site.yml 
 
 PLAY [Print os facts] ********************************************************************************************************************************************************
-skipping: no hosts matched
+
+TASK [Gathering Facts] *******************************************************************************************************************************************************
+[WARNING]: Platform darwin on host localhost is using the discovered Python interpreter at /usr/bin/python, but future installation of another Python interpreter could
+change the meaning of that path. See https://docs.ansible.com/ansible-core/2.11/reference_appendices/interpreter_discovery.html for more information.
+ok: [localhost]
+
+TASK [Print OS] **************************************************************************************************************************************************************
+ok: [localhost] => {
+    "msg": "MacOSX"
+}
+
+TASK [Print fact] ************************************************************************************************************************************************************
+ok: [localhost] => {
+    "msg": 12
+}
 
 PLAY RECAP *******************************************************************************************************************************************************************
+localhost                  : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+
+```
+2.</br>
+В файле ```./group_vars/all/examp.yml``` изменил значение для параметра ```some_fact``` на ```"all default fact"```. Результат вывода:
+
+```
+playbook|main⚡ ⇒ ansible-playbook -i inventory/test.yml site.yml 
+
+PLAY [Print os facts] ********************************************************************************************************************************************************
+
+TASK [Gathering Facts] *******************************************************************************************************************************************************
+[WARNING]: Platform darwin on host localhost is using the discovered Python interpreter at /usr/bin/python, but future installation of another Python interpreter could
+change the meaning of that path. See https://docs.ansible.com/ansible-core/2.11/reference_appendices/interpreter_discovery.html for more information.
+ok: [localhost]
+
+TASK [Print OS] **************************************************************************************************************************************************************
+ok: [localhost] => {
+    "msg": "MacOSX"
+}
+
+TASK [Print fact] ************************************************************************************************************************************************************
+ok: [localhost] => {
+    "msg": "all default fact"
+}
+
+PLAY RECAP *******************************************************************************************************************************************************************
+localhost                  : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+```
+3.</br>
+Использую *docker*
+
+4.</br>
+
+```
+playbook|main⚡ ⇒ docker ps -a
+CONTAINER ID   IMAGE                   COMMAND                CREATED      STATUS          PORTS     NAMES
+150d7187b161   arm64v8/ubuntu:latest   "sleep 600000000000"   3 days ago   Up 40 seconds             ubuntu
+d95efe99742c   arm64v8/centos:7        "sleep 600000000000"   3 days ago   Up 38 seconds             centos7
 ```
 
-Любые попытки внести изменения в ```ansible.cfg``` и в файл ```hosts```  к успеху не привели. 
-Каким образом можно решить данную проблему?
+``` 
+playbook|main⚡ ⇒ ansible-playbook -i inventory/prod.yml  site.yml 
 
-2.</br>
+PLAY [Print os facts] ********************************************************************************************************************************************************
 
+TASK [Gathering Facts] *******************************************************************************************************************************************************
+ok: [ubuntu]
+ok: [centos7]
+
+TASK [Print OS] **************************************************************************************************************************************************************
+ok: [centos7] => {
+    "msg": "CentOS"
+}
+ok: [ubuntu] => {
+    "msg": "Ubuntu"
+}
+
+TASK [Print fact] ************************************************************************************************************************************************************
+ok: [centos7] => {
+    "msg": "el"
+}
+ok: [ubuntu] => {
+    "msg": "deb"
+}
+
+PLAY RECAP *******************************************************************************************************************************************************************
+centos7                    : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+ubuntu                     : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0  
+```
+Для контейнера ```centos7``` значение ```some_fact``` приняло значение ```el```</br>
+Для контейнера ```ubuntu``` значение ```some_fact``` приняло значение ```deb```</br>
+
+5.</br>
+Изменил значения для ```deb/examp.yml``` и ```el/examp.yml``` на требуемые.
+
+6.</br>
+
+``` 
+playbook|main⚡ ⇒ ansible-playbook -i inventory/prod.yml  site.yml 
+
+PLAY [Print os facts] ********************************************************************************************************************************************************
+
+TASK [Gathering Facts] *******************************************************************************************************************************************************
+ok: [ubuntu]
+ok: [centos7]
+
+TASK [Print OS] **************************************************************************************************************************************************************
+ok: [centos7] => {
+    "msg": "CentOS"
+}
+ok: [ubuntu] => {
+    "msg": "Ubuntu"
+}
+
+TASK [Print fact] ************************************************************************************************************************************************************
+ok: [centos7] => {
+    "msg": "el default fact"
+}
+ok: [ubuntu] => {
+    "msg": "deb default fact"
+}
+
+PLAY RECAP *******************************************************************************************************************************************************************
+centos7                    : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+ubuntu                     : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+
+
+```
+7.</br>
 
