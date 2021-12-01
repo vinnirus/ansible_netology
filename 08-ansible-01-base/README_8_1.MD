@@ -156,3 +156,156 @@ ubuntu                     : ok=3    changed=0    unreachable=0    failed=0    s
 ```
 7.</br>
 
+``` 
+playbook|main⚡ ⇒ ansible-vault encrypt ./group_vars/deb/examp.yml
+New Vault password: 
+Confirm New Vault password: 
+Encryption successful
+playbook|main⚡ ⇒ ansible-vault encrypt ./group_vars/el/examp.yml
+New Vault password: 
+Confirm New Vault password: 
+Encryption successful
+```
+8.</br>
+
+``` 
+playbook|main⚡ ⇒ ansible-playbook -i inventory/prod.yml  --ask-vault-password site.yml 
+Vault password: 
+
+PLAY [Print os facts] ********************************************************************************************************************************************************
+
+TASK [Gathering Facts] *******************************************************************************************************************************************************
+ok: [ubuntu]
+ok: [centos7]
+
+TASK [Print OS] **************************************************************************************************************************************************************
+ok: [centos7] => {
+    "msg": "CentOS"
+}
+ok: [ubuntu] => {
+    "msg": "Ubuntu"
+}
+
+TASK [Print fact] ************************************************************************************************************************************************************
+ok: [centos7] => {
+    "msg": "el default fact"
+}
+ok: [ubuntu] => {
+    "msg": "deb default fact"
+}
+
+PLAY RECAP *******************************************************************************************************************************************************************
+centos7                    : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+ubuntu                     : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+```
+9.</br>
+
+``` 
+playbook|main⚡ ⇒ ansible-doc -t connection -l > ./ansible_doc_connection_plugins.txt
+[WARNING]: Collection frr.frr does not support Ansible version 2.11.6
+[WARNING]: Collection ibm.qradar does not support Ansible version 2.11.6
+[WARNING]: Collection splunk.es does not support Ansible version 2.11.6
+```
+
+10.</br>
+Содержимое файла ```prod.yml```:
+
+``` 
+---
+  el:
+    hosts:
+      centos7:
+        ansible_connection: docker
+  deb:
+    hosts:
+      ubuntu:
+        ansible_connection: docker
+  inside:
+    hosts:
+      localhost:
+        ansible_connection: local
+```
+``` 
+playbook|main⚡ ⇒ less ansible_doc_connection_plugins.txt  
+```
+Результат вывода:
+
+``` 
+ansible.netcommon.httpapi      Use httpapi to run command on network applia...
+ansible.netcommon.libssh       (Tech preview) Run tasks using libssh for ss...
+ansible.netcommon.napalm       Provides persistent connection using NAPALM 
+ansible.netcommon.netconf      Provides a persistent connection using the n...
+ansible.netcommon.network_cli  Use network_cli to run command on network ap...
+ansible.netcommon.persistent   Use a persistent unix socket for connection 
+community.aws.aws_ssm          execute via AWS Systems Manager             
+community.docker.docker        Run tasks in docker containers              
+community.docker.docker_api    Run tasks in docker containers              
+community.docker.nsenter       execute on host running controller container
+community.general.chroot       Interact with local chroot                  
+community.general.funcd        Use funcd to connect to target              
+community.general.iocage       Run tasks in iocage jails                   
+community.general.jail         Run tasks in jails                          
+community.general.lxc          Run tasks in lxc containers via lxc python l...
+community.general.lxd          Run tasks in lxc containers via lxc CLI     
+community.general.qubes        Interact with an existing QubesOS AppVM     
+community.general.saltstack    Allow ansible to piggyback on salt minions  
+community.general.zone         Run tasks in a zone instance                
+community.kubernetes.kubectl   Execute tasks in pods running on Kubernetes 
+community.libvirt.libvirt_lxc  Run tasks in lxc containers via libvirt     
+community.libvirt.libvirt_qemu Run tasks on libvirt/qemu virtual machines  
+community.okd.oc               Execute tasks in pods running on OpenShift  
+community.vmware.vmware_tools  Execute tasks inside a VM via VMware Tools  
+containers.podman.buildah      Interact with an existing buildah container 
+containers.podman.podman       Interact with an existing podman container  
+kubernetes.core.kubectl        Execute tasks in pods running on Kubernetes 
+local                          execute on controller                       
+paramiko_ssh                   Run tasks via python ssh (paramiko)
+psrp                           Run tasks over Microsoft PowerShell Remoting...
+ssh                            connect via ssh client binary               
+winrm                          Run tasks over Microsoft's WinRM  
+```
+
+11.</br>
+
+``` 
+playbook|main⚡ ⇒ ansible-playbook -i inventory/prod.yml  --ask-vault-password site.yml 
+Vault password: 
+
+PLAY [Print os facts] ********************************************************************************************************************************************************
+
+TASK [Gathering Facts] *******************************************************************************************************************************************************
+[WARNING]: Platform darwin on host localhost is using the discovered Python interpreter at /usr/bin/python, but future installation of another Python interpreter could
+change the meaning of that path. See https://docs.ansible.com/ansible-core/2.11/reference_appendices/interpreter_discovery.html for more information.
+ok: [localhost]
+ok: [ubuntu]
+ok: [centos7]
+
+TASK [Print OS] **************************************************************************************************************************************************************
+ok: [localhost] => {
+    "msg": "MacOSX"
+}
+ok: [centos7] => {
+    "msg": "CentOS"
+}
+ok: [ubuntu] => {
+    "msg": "Ubuntu"
+}
+
+TASK [Print fact] ************************************************************************************************************************************************************
+ok: [localhost] => {
+    "msg": "all default fact"
+}
+ok: [centos7] => {
+    "msg": "el default fact"
+}
+ok: [ubuntu] => {
+    "msg": "deb default fact"
+}
+
+PLAY RECAP *******************************************************************************************************************************************************************
+centos7                    : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+localhost                  : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+ubuntu                     : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+```
+
+
