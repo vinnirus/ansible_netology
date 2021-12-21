@@ -4,6 +4,9 @@
 Основная часть </br>
 1.</br>
 
+Playbook `site.yml` копирует на удаленный хост под управлением *ubuntu* на arm-процессоре локальный архив с *java 17*, затем распаковывает его в каталог `/opt/jdk/`, а также скачивает с репозитория *elasticsearch*, распаковывает архив в `/opt/elastic/` и устанавливает переменные окружения для него, тоже самое происходит для *kibana*.
+
+
 ```
 playbook|main⚡ ⇒ ansible-playbook -v -i inventory/prod.yml -K site.yml
 Using /etc/ansible/ansible.cfg as config file
