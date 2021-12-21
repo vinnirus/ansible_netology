@@ -1,0 +1,7 @@
+---
+all:
+  hosts:
+    ubuntu:
+      ansible_host:                 10.211.55.5
+      ansible_ssh_private_key_file: ~/.ssh/ansible_rsa
+      ansible_connection:           ssh
