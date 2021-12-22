@@ -5,7 +5,7 @@
 1.</br>
 
 ```
-playbook|main⚡ ⇒ ansible-playbook -v -i inventory/prod.yml -K site.yml
+playbook|main⚡ ⇒ ansible-playbook -v -i inventory/prod.yml -K --check site.yml
 Using /etc/ansible/ansible.cfg as config file
 BECOME password: 
 
@@ -18,7 +18,7 @@ TASK [Set facts for Java 17 vars] **********************************************
 ok: [ubuntu] => {"ansible_facts": {"java_home": "/opt/jdk/17"}, "changed": false}
 
 TASK [Upload .tar file containing binaries from local storage] ***************************************************************************************************************
-ok: [ubuntu] => {"attempts": 1, "changed": false, "checksum": "b76bc0cb631e1a0901ac9c455f6b1d0a516f16f4", "dest": "/tmp/jdk-17.tar", "gid": 1001, "group": "nikitavinogradov", "mode": "0664", "owner": "nikitavinogradov", "path": "/tmp/jdk-17.tar", "size": 317378560, "state": "file", "uid": 1001}
+changed: [ubuntu] => {"attempts": 1, "changed": true}
 
 TASK [Ensure installation dir exists] ****************************************************************************************************************************************
 ok: [ubuntu] => {"changed": false, "gid": 0, "group": "root", "mode": "0755", "owner": "root", "path": "/opt/jdk/17", "size": 4096, "state": "directory", "uid": 0}
@@ -64,10 +64,9 @@ TASK [Set environment Kibana] **************************************************
 ok: [ubuntu] => {"changed": false, "checksum": "0d92fec12846ce68cd8c09543a0eb9edd2cf9322", "dest": "/etc/profile.d/kibana.sh", "gid": 0, "group": "root", "mode": "0644", "owner": "root", "path": "/etc/profile.d/kibana.sh", "size": 191, "state": "file", "uid": 0}
 
 PLAY RECAP *******************************************************************************************************************************************************************
-ubuntu                     : ok=13   changed=0    unreachable=0    failed=0    skipped=3    rescued=0    ignored=0   
+ubuntu                     : ok=13   changed=1    unreachable=0    failed=0    skipped=3    rescued=0    ignored=0   
 
-playbook|main⚡ ⇒   
-
+playbook|main⚡ ⇒  
 ```
 
 
