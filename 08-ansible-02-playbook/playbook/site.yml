@@ -9,7 +9,7 @@
     - name: Upload .tar file containing binaries from local storage
       copy:
         src: "{{ java_oracle_jdk_package }}"
-        dest: "/tmp/jdk-{{ java_jdk_version }}.tar"
+        dest: "/tmp/jdk-{{ java_jdk_version }}_linux-aarch64_bin.tar"
       register: download_java_binaries
       until: download_java_binaries is succeeded
       tags: java
@@ -23,8 +23,8 @@
     - name: Extract java in the installation directory
       become: true
       unarchive:
-        copy: true
-        src: "/Users/nikitavinogradov/Documents/education/pyCharm/ansible_netology/08-ansible-02-playbook/playbook/jdk-{{ java_jdk_version }}_linux-aarch64_bin.tar"
+        remote_src: true
+        src: "/tmp/jdk-{{ java_jdk_version }}_linux-aarch64_bin.tar"
         dest: "{{ java_home }}"
         extra_opts: [--strip-components=1]
         creates: "{{ java_home }}/bin/java"
